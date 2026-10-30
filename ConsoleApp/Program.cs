@@ -156,7 +156,7 @@ while (true)
             System.Console.WriteLine("Max price: "+maxPrice);
             break;
         case "17":
-            System.Console.Write("Enter id of category: ");
+            System.Console.Write("Enter id of categories: ");
             var categoryIdForAvg = Convert.ToInt32(Console.ReadLine());
             var avgPrice = await productRepo.GetAveragePriceOfProductByCategoryAsync(categoryIdForAvg);
             System.Console.WriteLine("Average price: "+avgPrice);
