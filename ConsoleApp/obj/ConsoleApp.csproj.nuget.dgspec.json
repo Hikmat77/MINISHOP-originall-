@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\ConsoleApp\\ConsoleApp.csproj": {}
+    "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\ConsoleApp\\ConsoleApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\ConsoleApp\\ConsoleApp.csproj": {
+    "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\ConsoleApp\\ConsoleApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\ConsoleApp\\ConsoleApp.csproj",
+        "projectUniqueName": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\ConsoleApp\\ConsoleApp.csproj",
         "projectName": "ConsoleApp",
-        "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\ConsoleApp\\ConsoleApp.csproj",
+        "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\ConsoleApp\\ConsoleApp.csproj",
         "packagesPath": "C:\\Users\\firuz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\ConsoleApp\\obj\\",
+        "outputPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\ConsoleApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\firuz\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -27,11 +27,11 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\Domain.csproj"
+              "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\Domain.csproj"
               },
-              "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Infrastructure\\Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Infrastructure\\Infrastructure.csproj"
+              "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Infrastructure\\Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Infrastructure\\Infrastructure.csproj"
               }
             }
           }
@@ -346,14 +346,14 @@
         }
       }
     },
-    "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\Domain.csproj": {
+    "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\Domain.csproj",
+        "projectUniqueName": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\Domain.csproj",
         "projectName": "Domain",
-        "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\Domain.csproj",
+        "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\Domain.csproj",
         "packagesPath": "C:\\Users\\firuz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\obj\\",
+        "outputPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\firuz\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -681,14 +681,14 @@
         }
       }
     },
-    "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Infrastructure\\Infrastructure.csproj": {
+    "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Infrastructure\\Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Infrastructure\\Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Infrastructure\\Infrastructure.csproj",
         "projectName": "Infrastructure",
-        "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Infrastructure\\Infrastructure.csproj",
+        "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Infrastructure\\Infrastructure.csproj",
         "packagesPath": "C:\\Users\\firuz\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Infrastructure\\obj\\",
+        "outputPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\firuz\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -704,8 +704,8 @@
             "framework": "net10.0",
             "targetAlias": "net10.0",
             "projectReferences": {
-              "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\Domain.csproj": {
-                "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\day5.netpractice\\Domain\\Domain.csproj"
+              "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\Domain.csproj": {
+                "projectPath": "C:\\Users\\firuz\\OneDrive\\Desktop\\MINISHOP\\Domain\\Domain.csproj"
               }
             }
           }
@@ -727,6 +727,10 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.1.89, )"
+            },
             "Npgsql": {
               "target": "Package",
               "version": "[10.0.3, )"
