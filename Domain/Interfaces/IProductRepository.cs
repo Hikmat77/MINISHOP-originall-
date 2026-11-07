@@ -4,9 +4,9 @@ namespace Domain.Interfaces;
 
 public interface IProductRepository
 {
-    Task AddProductAsync(Product product);
-    Task UpdateProductAsync(Product product);
-    Task DeleteProductAsync(int id);
+    Task<bool> AddProductAsync(Product product);
+    Task<bool> UpdateProductAsync(Product product);
+    Task<bool> DeleteProductAsync(int id);
     Task<Product> GetProductAsync(int id);
     Task<List<Product>> GetProductsAsync();
     Task<List<Product>> GetProductsByCategoryAsync(int categoryId);
@@ -16,4 +16,4 @@ public interface IProductRepository
     Task<decimal> GetMaxPriceOfProductByCategoryAsync(int categoryId);
     Task<decimal> GetAveragePriceOfProductByCategoryAsync(int categoryId);
     Task<decimal> GetTotalPriceOfProductsAsync();
-}
+}   

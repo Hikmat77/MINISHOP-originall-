@@ -7,83 +7,52 @@ using Npgsql;
 
 namespace Infrastructure.Repositories;
 
-public class CategoryRepository : ICategoryRepository
+public class CategoryRepository(AppDbContext appDbContext) : ICategoryRepository
 {
-    public async Task AddCategoryAsync(Category category)
+    private AppDbContext _context = appDbContext;
+    public async Task<bool> AddCategoryAsync(Category category)
     {
-        using var connection = Database.Connection();
-        await connection.OpenAsync();
-        var query = $"insert into categories (name) values(@name)";
-        using var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("@name", category.Name);
-        await cmd.ExecuteNonQueryAsync();
-        System.Console.WriteLine("Added successfully!");
+        using var connection = _context.Connection();
+        var query = "insert into categories (name) values (@name)";
+        var res = await connection.ExecuteAsync(query, category);
+        return res > 0;
     }
 
-    public async Task DeleteCategoryAsync(int id)
+    public async Task<bool> DeleteCategoryAsync(int id)
     {
-        using var connection = Database.Connection();
-        await connection.OpenAsync();
-        var query = $"delete from categories where id = @id";
-        using var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("@id", id);
-        await cmd.ExecuteNonQueryAsync();
-        System.Console.WriteLine("Deleted successfully");
+        using var connection = _context.Connection();
+        var query = "delete from categories where id = @id";
+        var res = await connection.ExecuteAsync(query, new { id });
+        return res > 0;
     }
 
-
+    public async Task<int> GetAmountOfCategoriesAsync()
+    {
+        using var connection = _context.Connection();
+        var query = "select count(*) from categories";
+        return await connection.ExecuteScalarAsync<int>(query);
+    }
 
     public async Task<List<Category>> GetCategoriesAsync()
     {
-        using var connection = Database.Connection();
-        await connection.OpenAsync();
-        var query = "SELECT id, name FROM categories";
-        using var cmd = new NpgsqlCommand(query, connection);
-        using var data = await cmd.ExecuteReaderAsync();
-        var categories = new List<Category>();
-        while (await data.ReadAsync())
-        {
-            var category = new Category();
-            category.Id = data.GetInt32(0);
-            category.Name = data.GetString(1);
-            categories.Add(category);
-        }
-        return categories;
+        using var connection = _context.Connection();
+        var query = "select * from categories";
+        return (await connection.QueryAsync<Category>(query)).ToList();
     }
 
     public async Task<Category> GetCategoryAsync(int id)
     {
-        using var connection = Database.Connection();
-        await connection.OpenAsync();
-        var query = "SELECT id, name FROM categories WHERE id = @id";
-        using var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("@id", id);
-        using var data = await cmd.ExecuteReaderAsync();
-        var category = new Category();
-        while (await data.ReadAsync())
-        {
-            category.Id = data.GetInt32(0);
-            category.Name = data.GetString(1);
-        }
+        using var connection = _context.Connection();
+        var query = "select * from categories where id = @id";
+        var category = await connection.QuerySingleAsync<Category>(query, new { id });
         return category;
     }
 
-    public async Task UpdateCategoryAsync(Category category)
+    public async Task<bool> UpdateCategoryAsync(Category category)
     {
-        using var connection = Database.Connection();
-        await connection.OpenAsync();
-        var query = $"update categories set name = @name where id = @id";
-        using var cmd = new NpgsqlCommand(query, connection);
-        cmd.Parameters.AddWithValue("@name", category.Name);
-        cmd.Parameters.AddWithValue("@id", category.Id);
-        await cmd.ExecuteNonQueryAsync();
-        System.Console.WriteLine("Updated successfully");
-    }
-    public async Task<int> GetAmountOfCategoriesAsync()
-    {
-        using var connection = Database.Connection();
-        await connection.OpenAsync();
-        var query = "select count(*) from categories";
-        return await connection.ExecuteScalarAsync<int>(query);
+        using var connection = _context.Connection();
+        var query = "update categories set name = @name where id = @id";
+        var res = await connection.ExecuteAsync(query, category);
+        return res > 0;
     }
 }
