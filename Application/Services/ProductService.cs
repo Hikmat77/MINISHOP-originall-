@@ -1,4 +1,5 @@
 using System.Net;
+using Application.DTOs;
 using Application.Interfaces;
 using Application.Responses;
 using Domain.Interfaces;
@@ -9,11 +10,16 @@ namespace Application.Services;
 public class ProductService(IProductRepository productRepository) : IProductService
 {
     private IProductRepository repository = productRepository;
-
-    public async Task<ApiResponse<bool>> AddProductAsync(Product product)
+    public async Task<ApiResponse<bool>> AddProductAsync(CreateProductDto dto)
     {
+        var product = new Product()
+        {
+            Name = dto.Name,
+            Price = dto.Price,
+            CategoryId = dto.CategoryId
+        };
         var res = await repository.AddProductAsync(product);
-        return res == true
+        return res==true
         ? new ApiResponse<bool>(HttpStatusCode.OK, "Added!", res)
         : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not added.", res);
     }
@@ -21,35 +27,48 @@ public class ProductService(IProductRepository productRepository) : IProductServ
     public async Task<ApiResponse<bool>> DeleteProductAsync(int id)
     {
         var res = await repository.DeleteProductAsync(id);
-        return res == true
+        return res==true
         ? new ApiResponse<bool>(HttpStatusCode.OK, "Deleted!", res)
         : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not deleted.", res);
     }
 
-    public async Task<ApiResponse<Product>> GetProductAsync(int id)
+    public async Task<ApiResponse<ProductDto>> GetProductAsync(int id)
     {
-        var res = await repository.GetProductAsync(id);
-        return new ApiResponse<Product>(HttpStatusCode.OK, "Product with given id.", res);
+        var product = await repository.GetProductAsync(id);
+        var res = new ProductDto()
+        {
+            Id = product.Id,
+            Name = product.Name,
+            Price = product.Price,
+            CategoryId = product.CategoryId
+        };
+        return new ApiResponse<ProductDto>(HttpStatusCode.OK, "Product with given id.", res);
     }
 
-    public async Task<ApiResponse<List<Product>>> GetProductsAsync()
+    public async Task<ApiResponse<List<ProductDto>>> GetProductsAsync()
     {
-        var res = await repository.GetProductsAsync();
-        return new ApiResponse<List<Product>>(HttpStatusCode.OK, "List of products.", res);
+        var products = await repository.GetProductsAsync();
+        var res = products.Select(x=>new ProductDto()
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Price = x.Price,
+            CategoryId = x.CategoryId
+        }).ToList();
+        return new ApiResponse<List<ProductDto>>(HttpStatusCode.OK, "List of products.", res);
     }
 
-    public async Task<ApiResponse<List<Product>>> GetProductsByCategoryAsync(int categoryId)
+    public async Task<ApiResponse<List<ProductDto>>> GetProductsByCategoryAsync(int categoryId)
     {
-        var res = await repository.GetProductsByCategoryAsync(categoryId);
-        return new ApiResponse<List<Product>>(HttpStatusCode.OK, "List of products by category.", res);
-    }
-
-    public async Task<ApiResponse<bool>> UpdateProductAsync(Product product)
-    {
-        var res = await repository.UpdateProductAsync(product);
-        return res == true
-        ? new ApiResponse<bool>(HttpStatusCode.OK, "Updated!", res)
-        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not updated.", res);
+        var products = await repository.GetProductsByCategoryAsync(categoryId);
+        var res = products.Select(x=>new ProductDto()
+        {
+            Id = x.Id,
+            Name = x.Name,
+            Price = x.Price,
+            CategoryId = x.CategoryId
+        }).ToList();
+        return new ApiResponse<List<ProductDto>>(HttpStatusCode.OK, "List of products by category.", res);
     }
 
     public async Task<ApiResponse<int>> GetAmountOfProductsAsync()
@@ -86,5 +105,20 @@ public class ProductService(IProductRepository productRepository) : IProductServ
     {
         var res = await repository.GetTotalPriceOfProductsAsync();
         return new ApiResponse<decimal>(HttpStatusCode.OK, "Total price of products.", res);
+    }
+
+    public async Task<ApiResponse<bool>> UpdateProductAsync(int id, UpdateProductDto dto)
+    {
+        var product = new Product()
+        {
+            Id = id,
+            Name = dto.Name,
+            Price = dto.Price,
+            CategoryId = dto.CategoryId
+        };
+        var res = await repository.UpdateProductAsync(product);
+        return res==true
+        ? new ApiResponse<bool>(HttpStatusCode.OK, "Updated!", res)
+        : new ApiResponse<bool>(HttpStatusCode.InternalServerError, "Not updated.", res);
     }
 }
