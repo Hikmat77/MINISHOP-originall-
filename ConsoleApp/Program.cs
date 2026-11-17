@@ -1,1 +1,1 @@
-﻿
+Console.WriteLine("Minishop Console app is running.");

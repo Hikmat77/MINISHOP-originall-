@@ -1,99 +1,91 @@
-using Dapper;
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
 public class ProductRepository(AppDbContext appDbContext) : IProductRepository
 {
-    private AppDbContext _context = appDbContext;
+    private readonly AppDbContext _context = appDbContext;
 
     public async Task<bool> AddProductAsync(Product product)
     {
-        using var connection = _context.Connection();
-        var query = "insert into products (name, price, category_id) values (@name, @price, @categoryId)";
-        var res = await connection.ExecuteAsync(query, product);
+        _context.Products.Add(product);
+        var res = await _context.SaveChangesAsync();
         return res > 0;
     }
 
     public async Task<bool> DeleteProductAsync(int id)
     {
-        using var connection = _context.Connection();
-        var query = "delete from products where id = @id";
-        var res = await connection.ExecuteAsync(query, new { id });
+        var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+        if (product is null)
+        {
+            return false;
+        }
+
+        _context.Products.Remove(product);
+        var res = await _context.SaveChangesAsync();
         return res > 0;
     }
 
     public async Task<Product> GetProductAsync(int id)
     {
-        using var connection = _context.Connection();
-        var query = "select id, name, price, category_id as categoryid from products where id = @id";
-        var product = await connection.QuerySingleAsync<Product>(query, new { id });
-        return product;
+        return await _context.Products.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id) ?? new Product();
     }
 
     public async Task<List<Product>> GetProductsAsync()
     {
-        using var connection = _context.Connection();
-        var query = "select id, name, price, category_id as categoryid from products";
-        return (await connection.QueryAsync<Product>(query)).ToList();
+        return await _context.Products.AsNoTracking().ToListAsync();
     }
 
     public async Task<List<Product>> GetProductsByCategoryAsync(int categoryId)
     {
-        using var connection = _context.Connection();
-        var query = "select id, name, price, category_id as categoryid from products where category_id = @categoryId";
-        return (await connection.QueryAsync<Product>(query, new { categoryId })).ToList();
+        return await _context.Products.AsNoTracking().Where(x => x.CategoryId == categoryId).ToListAsync();
     }
 
     public async Task<bool> UpdateProductAsync(Product product)
     {
-        using var connection = _context.Connection();
-        var query = "update products set name = @name, price = @price, category_id = @categoryId where id = @id";
-        var res = await connection.ExecuteAsync(query, product);
+        var existingProduct = await _context.Products.FirstOrDefaultAsync(x => x.Id == product.Id);
+        if (existingProduct is null)
+        {
+            return false;
+        }
+
+        existingProduct.Name = product.Name;
+        existingProduct.Price = product.Price;
+        existingProduct.CategoryId = product.CategoryId;
+        var res = await _context.SaveChangesAsync();
         return res > 0;
     }
 
     public async Task<int> GetAmountOfProductsAsync()
     {
-        using var connection = _context.Connection();
-        var query = "select count(*) from products";
-        return await connection.ExecuteScalarAsync<int>(query);
+        return await _context.Products.CountAsync();
     }
 
     public async Task<int> GetAmountOfProductsByCategoryAsync(int categoryId)
     {
-        using var connection = _context.Connection();
-        var query = "select count(*) from products where category_id = @categoryId";
-        return await connection.ExecuteScalarAsync<int>(query, new { categoryId });
+        return await _context.Products.CountAsync(x => x.CategoryId == categoryId);
     }
 
     public async Task<decimal> GetMinPriceOfProductByCategoryAsync(int categoryId)
     {
-        using var connection = _context.Connection();
-        var query = "select min(price) from products where category_id = @categoryId";
-        return await connection.ExecuteScalarAsync<decimal>(query, new { categoryId });
+        return await _context.Products.Where(x => x.CategoryId == categoryId).MinAsync(x => (decimal?)x.Price) ?? 0m;
     }
 
     public async Task<decimal> GetMaxPriceOfProductByCategoryAsync(int categoryId)
     {
-        using var connection = _context.Connection();
-        var query = "select max(price) from products where category_id = @categoryId";
-        return await connection.ExecuteScalarAsync<decimal>(query, new { categoryId });
+        return await _context.Products.Where(x => x.CategoryId == categoryId).MaxAsync(x => (decimal?)x.Price) ?? 0m;
     }
 
     public async Task<decimal> GetAveragePriceOfProductByCategoryAsync(int categoryId)
     {
-        using var connection = _context.Connection();
-        var query = "select avg(price) from products where category_id = @categoryId";
-        return await connection.ExecuteScalarAsync<decimal>(query, new { categoryId });
+        return await _context.Products.Where(x => x.CategoryId == categoryId).AverageAsync(x => (decimal?)x.Price) ?? 0m;
     }
 
     public async Task<decimal> GetTotalPriceOfProductsAsync()
     {
-        using var connection = _context.Connection();
-        var query = "select sum(price) from products";
-        return await connection.ExecuteScalarAsync<decimal>(query);
+        return await _context.Products.SumAsync(x => (decimal?)x.Price) ?? 0m;
     }
 }
