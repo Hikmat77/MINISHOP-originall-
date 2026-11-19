@@ -39,6 +39,14 @@ public class CategoryRepository(AppDbContext appDbContext) : ICategoryRepository
         return await _context.Categories.AsNoTracking().ToListAsync();
     }
 
+    public async Task<List<Category>> GetCategoriesWithProductsAsync()
+    {
+        return await _context.Categories
+            .AsNoTracking()
+            .Include(x => x.Products)
+            .ToListAsync();
+    }
+
     public async Task<Category> GetCategoryAsync(int id)
     {
         return await _context.Categories.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id) ?? new Category();

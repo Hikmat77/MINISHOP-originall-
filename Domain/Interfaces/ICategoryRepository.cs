@@ -9,5 +9,6 @@ public interface ICategoryRepository
     Task<bool> DeleteCategoryAsync(int id);
     Task<Category> GetCategoryAsync(int id);
     Task<List<Category>> GetCategoriesAsync();
+    Task<List<Category>> GetCategoriesWithProductsAsync();
     Task<int> GetAmountOfCategoriesAsync();
 }

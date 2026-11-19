@@ -34,9 +34,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 .HasMaxLength(200);
             entity.Property(x => x.Price).HasColumnName("price").HasColumnType("numeric(18,2)");
             entity.Property(x => x.CategoryId).HasColumnName("category_id");
-            entity.HasOne<Category>()
-                .WithMany()
+            entity.HasOne(x => x.Category)
+                .WithMany(x => x.Products)
                 .HasForeignKey(x => x.CategoryId)
+                .HasConstraintName("products_category_id_fkey")
                 .OnDelete(DeleteBehavior.Cascade);
         });
     }

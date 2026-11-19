@@ -8,12 +8,10 @@ using Domain.Models;
 namespace Application.Services;
 
 public class CategoryService(
-    ICategoryRepository categoryRepository,
-    IProductRepository productRepository
+    ICategoryRepository categoryRepository
     ) : ICategoryService
 {
     private ICategoryRepository repository = categoryRepository;
-    private readonly IProductRepository _productRepository = productRepository;
     public async Task<ApiResponse<bool>> AddCategoryAsync(CreateCategoryDto dto)
     {
         var category = new Category()
@@ -64,24 +62,19 @@ public class CategoryService(
 
     public async Task<ApiResponse<List<CategoryWithProducts>>> GetCategoriesWithProductsAsync()
     {
-        var categories = await repository.GetCategoriesAsync();
-        var res = new List<CategoryWithProducts>();
-        foreach (var x in categories)
+        var categories = await repository.GetCategoriesWithProductsAsync();
+        var res = categories.Select(x => new CategoryWithProducts()
         {
-            var products = await _productRepository.GetProductsByCategoryAsync(x.Id);
-            res.Add(new CategoryWithProducts()
+            Id = x.Id,
+            Name = x.Name,
+            Products = x.Products.Select(p => new ProductDto()
             {
-                Id = x.Id,
-                Name = x.Name,
-                Products = products.Select(p=>new ProductDto()
-                {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Price = p.Price,
-                    CategoryId = p.CategoryId
-                }).ToList()
-            });
-        }
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                CategoryId = p.CategoryId
+            }).ToList()
+        }).ToList();
         return new ApiResponse<List<CategoryWithProducts>>(HttpStatusCode.OK, "List of categories with products.", res);
     }
 
